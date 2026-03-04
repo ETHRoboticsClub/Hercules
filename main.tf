@@ -143,6 +143,7 @@ module "eks_addons" {
   cluster_name                      = module.eks.cluster_name
   vpc_id                            = module.vpc.vpc_id
   node_tier                         = var.node_tier
+  gpum_instance_types               = var.gpum_instance_types
   node_disk_size                    = var.node_disk_size
   oidc_provider_arn                 = module.eks.oidc_provider_arn
   karpenter_role_arn                = module.eks.karpenter_role_arn

@@ -57,6 +57,12 @@ variable "node_tier" {
   }
 }
 
+variable "gpum_instance_types" {
+  description = "List of EC2 instance types to use for the 'gpum' NodePool. Defaults to a single g6e.4xlarge (1x L40S)."
+  type        = list(string)
+  default     = ["g6e.4xlarge"]
+}
+
 variable "node_disk_size" {
   description = "Disk size in GB for worker nodes"
   type        = number

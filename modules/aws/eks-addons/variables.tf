@@ -29,6 +29,11 @@ variable "node_tier" {
   }
 }
 
+variable "gpum_instance_types" {
+  description = "List of EC2 instance types to use for the 'gpum' NodePool."
+  type        = list(string)
+}
+
 variable "karpenter_role_arn" {
   description = "IAM role ARN for the Karpenter controller (IRSA)."
   type        = string
