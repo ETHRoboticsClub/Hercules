@@ -136,7 +136,7 @@ resource "aws_eks_cluster" "main" {
   )
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 
   depends_on = [

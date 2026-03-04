@@ -25,9 +25,16 @@ terraform {
   }
 }
 
+locals {
+  # Append --profile only when a named profile is explicitly set.
+  _profile_args   = var.aws_profile != null ? ["--profile", var.aws_profile] : []
+  eks_token_args  = concat(["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region], local._profile_args)
+}
+
 # Configure the AWS Provider
 provider "aws" {
-  region = var.region
+  region  = var.region
+  profile = var.aws_profile
 }
 
 provider "helm" {
@@ -38,7 +45,7 @@ provider "helm" {
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"
-      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+      args        = local.eks_token_args
     }
   }
 }
@@ -51,7 +58,7 @@ provider "kubectl" {
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
     command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+    args        = local.eks_token_args
   }
 }
 
@@ -62,7 +69,7 @@ provider "kubernetes" {
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
     command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+    args        = local.eks_token_args
   }
 }
 
@@ -134,7 +141,9 @@ module "eks_addons" {
   source = "./modules/aws/eks-addons"
 
   cluster_name                      = module.eks.cluster_name
+  vpc_id                            = module.vpc.vpc_id
   node_tier                         = var.node_tier
+  gpum_instance_types               = var.gpum_instance_types
   node_disk_size                    = var.node_disk_size
   oidc_provider_arn                 = module.eks.oidc_provider_arn
   karpenter_role_arn                = module.eks.karpenter_role_arn
@@ -155,8 +164,11 @@ module "eks_addons" {
   workload_namespaces = var.workload_namespaces
   argocd_team_groups  = var.argocd_team_groups
 
-  # Kubeflow Training Operator
+  # Kubeflow
   kubeflow_training_operator_enabled = var.kubeflow_training_operator_enabled
+  kubeflow_dashboard_enabled         = var.kubeflow_dashboard_enabled
+  kubeflow_dashboard_hostname        = var.kubeflow_dashboard_hostname
+  kubeflow_dashboard_certificate_arn = var.kubeflow_dashboard_certificate_arn
 
   tags = var.tags
 

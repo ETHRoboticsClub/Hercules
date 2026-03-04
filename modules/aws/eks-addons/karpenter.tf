@@ -109,8 +109,7 @@ resource "kubectl_manifest" "nodepool_gpum" {
           expireAfter  = var.gpu_node_max_lifetime
           requirements = [
             { key = "karpenter.sh/capacity-type", operator = "In", values = ["on-demand"] },
-            { key = "karpenter.k8s.aws/instance-family", operator = "In", values = ["g6e"] },
-            { key = "karpenter.k8s.aws/instance-size", operator = "In", values = ["4xlarge"] },
+            { key = "node.kubernetes.io/instance-type", operator = "In", values = var.gpum_instance_types },
             { key = "kubernetes.io/arch", operator = "In", values = ["amd64"] },
           ]
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]

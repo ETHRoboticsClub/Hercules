@@ -4,6 +4,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "aws_profile" {
+  description = "AWS CLI named profile to use for authentication. Defaults to the AWS_PROFILE environment variable or the 'default' profile when null."
+  type        = string
+  default     = null
+}
+
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
@@ -49,6 +55,12 @@ variable "node_tier" {
     condition     = contains(["cpu", "gpum", "gpul"], var.node_tier)
     error_message = "node_tier must be one of: cpu, gpum, gpul."
   }
+}
+
+variable "gpum_instance_types" {
+  description = "List of EC2 instance types to use for the 'gpum' NodePool. Defaults to a single g6e.4xlarge (1x L40S)."
+  type        = list(string)
+  default     = ["g6e.4xlarge"]
 }
 
 variable "node_disk_size" {
@@ -174,7 +186,25 @@ variable "argocd_certificate_arn" {
 }
 
 variable "kubeflow_training_operator_enabled" {
-  description = "Install the Kubeflow Training Operator for distributed PyTorchJob workloads."
+  description = "Install Kubeflow Trainer v2 for distributed ML training with the TrainJob API. Includes JobSet and default ClusterTrainingRuntimes (torch, deepspeed, mlx, jax, torchtune)."
   type        = bool
   default     = true
+}
+
+variable "kubeflow_dashboard_enabled" {
+  description = "Deploy the Kubeflow Central Dashboard. Requires kubeflow_training_operator_enabled = true."
+  type        = bool
+  default     = true
+}
+
+variable "kubeflow_dashboard_hostname" {
+  description = "Public hostname for the Kubeflow Dashboard (e.g. kubeflow.example.com). Set alongside kubeflow_dashboard_certificate_arn to create an internet-facing ALB with WAF."
+  type        = string
+  default     = null
+}
+
+variable "kubeflow_dashboard_certificate_arn" {
+  description = "ACM certificate ARN for the Kubeflow Dashboard HTTPS listener. Must cover kubeflow_dashboard_hostname."
+  type        = string
+  default     = null
 }
