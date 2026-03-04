@@ -34,8 +34,11 @@ resource "helm_release" "kubeflow_trainer" {
       }
     }
     runtimes = {
-      # Installs ClusterTrainingRuntimes for: torch, deepspeed, mlx, jax, torchtune
+      # Base set: torch, deepspeed, mlx, jax, torchtune
       defaultEnabled = true
+      # Explicit distributed training runtimes (PyTorch DDP, DeepSpeed)
+      torchDistributed = { enabled = true }
+      deepspeedDistributed = { enabled = true }
     }
   })]
 
