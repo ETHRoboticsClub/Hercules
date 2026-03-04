@@ -48,6 +48,60 @@ resource "helm_release" "kubeflow_trainer" {
   ]
 }
 
+# ClusterTrainingRuntime torch-distributed — fallback when Helm chart doesn't create it.
+# Required for TrainJobs with runtimeRef.name: torch-distributed.
+resource "kubectl_manifest" "torch_distributed_runtime" {
+  count = local.install_training_operator ? 1 : 0
+
+  yaml_body = yamlencode({
+    apiVersion = "trainer.kubeflow.org/v1alpha1"
+    kind       = "ClusterTrainingRuntime"
+    metadata = {
+      name = "torch-distributed"
+      labels = {
+        "trainer.kubeflow.org/framework" = "torch"
+      }
+    }
+    spec = {
+      mlPolicy = {
+        numNodes = 1
+        torch    = { numProcPerNode = "auto" }
+      }
+      template = {
+        spec = {
+          replicatedJobs = [
+            {
+              name = "node"
+              template = {
+                metadata = {
+                  labels = {
+                    "trainer.kubeflow.org/trainjob-ancestor-step" = "trainer"
+                  }
+                }
+                spec = {
+                  template = {
+                    spec = {
+                      containers = [
+                        {
+                          name  = "node"
+                          image = "pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime"
+                          # TrainJob can override image via spec.template
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  })
+
+  depends_on = [helm_release.kubeflow_trainer]
+}
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Kubeflow Central Dashboard — web UI for the Kubeflow platform
 # Deployed without Istio; WAF on the ALB handles access control.
