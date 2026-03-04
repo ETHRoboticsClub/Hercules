@@ -7,20 +7,18 @@
 #     -var="state_bucket_name=<bucket>" \
 #     -var="region=us-east-1"
 #
-# Then initialise the root module with the values from bootstrap output:
+# Then initialise the root module:
 #
-#   tofu init \
-#     -backend-config="bucket=<state-bucket-name>" \
-#     -backend-config="dynamodb_table=<lock-table-name>" \
-#     -backend-config="profile=<aws-profile>"          # omit to use default
+#   tofu init -reconfigure
 #
-# Partial configuration — bucket and dynamodb_table are supplied via
-# -backend-config flags at `tofu init` time so secrets stay out of code.
+# bucket and profile are now inlined in the backend block below.
 
 terraform {
   backend "s3" {
+    bucket  = "ethrc-tf"
     key     = "hercules/eks/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
+    profile = "default"
   }
 }
