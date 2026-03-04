@@ -25,9 +25,16 @@ terraform {
   }
 }
 
+locals {
+  # Append --profile only when a named profile is explicitly set.
+  _profile_args   = var.aws_profile != null ? ["--profile", var.aws_profile] : []
+  eks_token_args  = concat(["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region], local._profile_args)
+}
+
 # Configure the AWS Provider
 provider "aws" {
-  region = var.region
+  region  = var.region
+  profile = var.aws_profile
 }
 
 provider "helm" {
@@ -38,7 +45,7 @@ provider "helm" {
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"
-      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+      args        = local.eks_token_args
     }
   }
 }
@@ -51,7 +58,7 @@ provider "kubectl" {
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
     command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+    args        = local.eks_token_args
   }
 }
 
@@ -62,7 +69,7 @@ provider "kubernetes" {
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
     command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.region]
+    args        = local.eks_token_args
   }
 }
 

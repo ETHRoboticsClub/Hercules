@@ -4,6 +4,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "aws_profile" {
+  description = "AWS CLI named profile to use for authentication. Defaults to the AWS_PROFILE environment variable or the 'default' profile when null."
+  type        = string
+  default     = null
+}
+
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string

@@ -11,7 +11,8 @@
 #
 #   tofu init \
 #     -backend-config="bucket=<state-bucket-name>" \
-#     -backend-config="dynamodb_table=<lock-table-name>"
+#     -backend-config="dynamodb_table=<lock-table-name>" \
+#     -backend-config="profile=<aws-profile>"          # omit to use default
 #
 # Partial configuration — bucket and dynamodb_table are supplied via
 # -backend-config flags at `tofu init` time so secrets stay out of code.
