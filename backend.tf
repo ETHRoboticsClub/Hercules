@@ -19,6 +19,6 @@ terraform {
     key     = "hercules/eks/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
-    profile = "default"
+    profile = "ethrc"
   }
 }

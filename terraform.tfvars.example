@@ -12,7 +12,7 @@ region       = "us-east-1"
 node_tier = "cpu"
 
 # List of EC2 instance types for the 'gpum' pool.
-# gpum_instance_types = ["g6e.xlarge", "g6e.2xlarge"]
+# gpum_instance_types = ["g6e.xlarge", "g6e.2xlarge", "g5.xlarge", "g5.2xlarge", "g4dn.xlarge"]
 
 # Hard TTL for gpus/gpum/gpul nodes. Karpenter drains and terminates any node running
 # longer than this, regardless of what's on it. Default: 24h. Set "Never" to disable.
