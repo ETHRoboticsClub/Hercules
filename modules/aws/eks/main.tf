@@ -491,7 +491,7 @@ resource "aws_iam_role_policy" "karpenter" {
         Sid      = "AllowInstanceProfileReadActions"
         Effect   = "Allow"
         Resource = ["*"]
-        Action   = ["iam:GetInstanceProfile"]
+        Action   = ["iam:GetInstanceProfile", "iam:ListInstanceProfiles"]
       },
       {
         Sid      = "AllowAPIServerEndpointDiscovery"

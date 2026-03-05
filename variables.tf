@@ -58,9 +58,9 @@ variable "node_tier" {
 }
 
 variable "gpum_instance_types" {
-  description = "List of EC2 instance types to use for the 'gpum' NodePool. Defaults to g6e.xlarge and g6e.2xlarge (1× L40S)."
+  description = "List of EC2 instance types to use for the 'gpum' NodePool. g5/g4dn are fallbacks for regions where g6e has limited availability."
   type        = list(string)
-  default     = ["g6e.xlarge", "g6e.2xlarge"]
+  default     = ["g6e.xlarge", "g6e.2xlarge", "g5.xlarge", "g5.2xlarge", "g4dn.xlarge"]
 }
 
 variable "node_disk_size" {
