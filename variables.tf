@@ -57,6 +57,12 @@ variable "node_tier" {
   }
 }
 
+variable "gpu_operator_enabled" {
+  description = "Install the NVIDIA GPU Operator. Set to true whenever GPU node pools are active."
+  type        = bool
+  default     = true
+}
+
 variable "gpum_instance_types" {
   description = "List of EC2 instance types to use for the 'gpum' NodePool. g5/g4dn are fallbacks for regions where g6e has limited availability."
   type        = list(string)

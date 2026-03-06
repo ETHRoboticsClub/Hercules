@@ -20,13 +20,19 @@ variable "s3_bucket_arns" {
 }
 
 variable "node_tier" {
-  description = "Compute tier inherited from the EKS module. When set to 'gpus', 'gpum' or 'gpul', the NVIDIA GPU Operator is installed automatically."
+  description = "Compute tier inherited from the EKS module."
   type        = string
 
   validation {
     condition     = contains(["cpu", "gpus", "gpum", "gpul"], var.node_tier)
     error_message = "node_tier must be one of: cpu, gpus, gpum, gpul."
   }
+}
+
+variable "gpu_operator_enabled" {
+  description = "Install the NVIDIA GPU Operator. Enable whenever GPU node pools are active."
+  type        = bool
+  default     = true
 }
 
 variable "gpum_instance_types" {
