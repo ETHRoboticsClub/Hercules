@@ -69,8 +69,43 @@ resource "aws_eks_addon" "s3_csi" {
 
   service_account_role_arn = aws_iam_role.s3_csi[0].arn
 
+  # Tolerate GPU taints so the node agent runs on Karpenter GPU nodes
+  configuration_values = jsonencode({
+    node = {
+      tolerations = [
+        { key = "nvidia.com/gpu", operator = "Exists", effect = "NoSchedule" },
+      ]
+    }
+  })
+
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
 
   tags = var.tags
+}
+
+# StorageClass — one per S3 bucket, named after the bucket
+resource "kubectl_manifest" "s3_storageclass" {
+  for_each = local.install_s3_csi ? toset(var.s3_bucket_arns) : toset([])
+
+  yaml_body = yamlencode({
+    apiVersion = "storage.k8s.io/v1"
+    kind       = "StorageClass"
+    metadata = {
+      name = "s3-${regex("[^:]+$", each.key)}"
+      annotations = {
+        "mountpoint-s3.csi.aws.com/bucket-name" = regex("[^:]+$", each.key)
+        "storageclass.kubernetes.io/is-default-class" = "false"
+      }
+    }
+    provisioner = "s3.csi.aws.com"
+    parameters = {
+      bucketName = regex("[^:]+$", each.key)
+    }
+    reclaimPolicy        = "Retain"
+    volumeBindingMode    = "Immediate"
+    mountOptions = ["allow-delete", "region ${data.aws_region.current.id}"]
+  })
+
+  depends_on = [aws_eks_addon.s3_csi]
 }

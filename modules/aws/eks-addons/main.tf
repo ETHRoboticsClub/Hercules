@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 locals {
   oidc_issuer = regex("oidc-provider/(.+)$", var.oidc_provider_arn)[0]
 }
