@@ -6,7 +6,7 @@
 # manage the device plugin, DCGM exporter, and other components.
 
 locals {
-  install_gpu_operator = contains(["gpus", "gpum", "gpul"], var.node_tier)
+  install_gpu_operator = var.gpu_operator_enabled
 }
 
 resource "helm_release" "nvidia_gpu_operator" {
@@ -20,7 +20,9 @@ resource "helm_release" "nvidia_gpu_operator" {
   create_namespace = true
 
   values = [yamlencode({
-    driver = { enabled = false }
+    driver       = { enabled = true }
+    toolkit      = { enabled = true }
+    devicePlugin = { enabled = true }
   })]
 
   depends_on = [
