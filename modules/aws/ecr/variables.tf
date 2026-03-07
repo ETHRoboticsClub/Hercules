@@ -18,3 +18,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "ecr_push_iam_users" {
+  description  = "IAM user names to grant ECR push/pull access."
+  type          = list(string)
+  default       = []
+}
