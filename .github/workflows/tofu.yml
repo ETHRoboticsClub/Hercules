@@ -95,7 +95,8 @@ jobs:
           [ -f plan.ansi ] || exit 0
           {
             echo '```diff'
-            sed 's/\x1b\[[0-9;]*m//g' plan.ansi
+            sed 's/\x1b\[[0-9;]*m//g' plan.ansi \
+              | sed 's/arn:aws:iam::[0-9]*:[^"[:space:]]*/[REDACTED]/g'
             echo '```'
           } >> $GITHUB_STEP_SUMMARY
 
