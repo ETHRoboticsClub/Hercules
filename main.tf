@@ -119,7 +119,8 @@ module "eks" {
 
   # Node Group Configuration
   node_disk_size = var.node_disk_size
-  cluster_access = var.cluster_access
+  cluster_access         = var.cluster_access
+  ml_scripts_bucket_arn  = "arn:aws:s3:::${var.ml_scripts_bucket_name}"
 
   api_server_allowed_cidrs = var.api_server_allowed_cidrs
 
