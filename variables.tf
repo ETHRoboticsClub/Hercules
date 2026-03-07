@@ -170,6 +170,21 @@ variable "argocd_team_groups" {
   type        = map(list(string))
   default     = {}
 }
+
+# ── ECR variables ─────────────────────────────────────────────────────────
+variable "ecr_repository_names" {
+  description = "ECR repository names to create for container images."
+  type        = list(string)
+  default     = ["ethroboticsclub/pytorch", "ethroboticsclub/jax"]
+}
+
+variable "ecr_github_repositories" {
+  description = "GitHub repositories allowed to push to ECR (format: org/repo)."
+  type        = list(string)
+  default     = ["ethroboticsclub/docker-images"]
+}
+
+
 # ── Access restriction ─────────────────────────────────────────────────────────
 
 variable "api_server_allowed_cidrs" {
@@ -219,3 +234,4 @@ variable "kubeflow_dashboard_certificate_arn" {
   type        = string
   default     = null
 }
+

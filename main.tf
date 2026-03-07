@@ -137,6 +137,17 @@ module "waf" {
   tags = var.tags
 }
 
+# ECR module
+module "ecr" {
+  source = "./modules/aws/ecr"
+
+  name_prefix         = var.cluster_name
+  repository_names    = var.ecr_repository_names
+  github_repositories = var.ecr_github_repositories
+
+  tags = var.tags
+}
+
 # EKS Addons Module
 module "eks_addons" {
   source = "./modules/aws/eks-addons"
