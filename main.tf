@@ -136,15 +136,6 @@ module "waf" {
   tags = var.tags
 }
 
-# ECR Pull-Through Cache Module
-module "ecr" {
-  source = "./modules/aws/ecr"
-
-  dockerhub_credentials_secret_arn = var.dockerhub_credentials_secret_arn
-
-  tags = var.tags
-}
-
 # EKS Addons Module
 module "eks_addons" {
   source = "./modules/aws/eks-addons"
@@ -166,7 +157,6 @@ module "eks_addons" {
     var.s3_bucket_arns,
   )
   gpu_node_max_lifetime             = var.gpu_node_max_lifetime
-  ecr_registry_url                  = module.ecr.registry_url
 
   # ArgoCD
   argocd_enabled         = var.argocd_enabled

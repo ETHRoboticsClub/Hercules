@@ -2,15 +2,6 @@
 # Karpenter
 # ─────────────────────────────────────────────────────────────────────────────
 
-locals {
-  # MIME multipart user data injected into every Karpenter-provisioned node.
-  # The shell script creates per-registry hosts.toml files under
-  # /etc/containerd/certs.d/ so containerd mirrors all public-registry pulls
-  # through the ECR pull-through cache, bypassing the NAT Gateway entirely.
-  ec2nodeclass_userdata = templatefile("${path.module}/ec2nodeclass-userdata.tpl", {
-    ecr_registry_url = var.ecr_registry_url
-  })
-}
 
 resource "helm_release" "karpenter" {
   name             = "karpenter"
@@ -54,7 +45,6 @@ resource "kubectl_manifest" "karpenter_node_class" {
       subnetSelectorTerms        = [{ tags = { "karpenter.sh/discovery" = var.cluster_name } }]
       securityGroupSelectorTerms = [{ tags = { "karpenter.sh/discovery" = var.cluster_name } }]
       tags                       = merge(var.tags, { "karpenter.sh/discovery" = var.cluster_name })
-      userData                   = local.ec2nodeclass_userdata
 
       metadataOptions = {
         httpEndpoint            = "enabled"
