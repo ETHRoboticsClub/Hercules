@@ -152,7 +152,7 @@ resource "kubectl_manifest" "nodepool_gpum" {
   depends_on = [kubectl_manifest.karpenter_node_class]
 }
 
-# NodePool: gpul — single p5.xlarge GPU node (1× H100), on-demand only
+# NodePool: gpul — g6e.12xlarge GPU node (4× L40S 192GB), on-demand only
 resource "kubectl_manifest" "nodepool_gpul" {
   yaml_body = yamlencode({
     apiVersion = "karpenter.sh/v1"
@@ -166,8 +166,7 @@ resource "kubectl_manifest" "nodepool_gpul" {
           expireAfter  = var.gpu_node_max_lifetime
           requirements = [
             { key = "karpenter.sh/capacity-type", operator = "In", values = ["on-demand"] },
-            { key = "karpenter.k8s.aws/instance-family", operator = "In", values = ["p5"] },
-            { key = "karpenter.k8s.aws/instance-size", operator = "In", values = ["xlarge"] },
+            { key = "node.kubernetes.io/instance-type", operator = "In", values = ["g6e.12xlarge"] },
             { key = "kubernetes.io/arch", operator = "In", values = ["amd64"] },
           ]
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]

@@ -6,11 +6,19 @@ Cluster orchestration for the ETHRC organisation. OpenTofu IaC that provisions a
 
 - **VPC** — dual-stack, IPv6-primary across 3 AZs (AWS-provided or BYOIP)
 - **EKS** — Kubernetes cluster with Karpenter node autoscaling
-- **Nodes** — CPU (`cpu`), entry-level GPU (`gpus`), configurable mid-GPU (`gpum`), or single-GPU (`gpul`) tiers
+- **Nodes** — CPU (`cpu`), entry-level GPU (`gpus`), mid GPU (`gpum`), or large GPU (`gpul`) tiers provisioned on demand by Karpenter
 - **Add-ons** — Karpenter, CoreDNS, VPC CNI, EBS CSI, NVIDIA GPU Operator (GPU tiers), S3 CSI
 - **ArgoCD** — GitOps-driven workload delivery with per-project repo whitelisting
 - **S3** — KMS-encrypted bucket for ML data, checkpoints, and model artefacts
 - **Cost controls** — GPU node TTL (`gpu_node_max_lifetime`) and a cost killswitch script
+
+### GPU tiers
+
+| Tier | Node pool | Instance | GPU | VRAM | Primary workload |
+|------|-----------|----------|-----|------|-----------------|
+| S | `gpus` | g6.xlarge | 1× L4 | 24 GB | Code validation, EDA, script debugging |
+| M | `gpum` | g6e.xlarge | 1× L40S | 48 GB | Core prototyping, LoRA fine-tuning (up to 14B params), heavy inference |
+| L | `gpul` | g6e.12xlarge | 4× L40S | 192 GB | Distributed training (DDP/FSDP), continuous pre-training, large batch sizes |
 
 ## Quick start
 

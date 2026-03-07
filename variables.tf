@@ -64,9 +64,9 @@ variable "gpu_operator_enabled" {
 }
 
 variable "gpum_instance_types" {
-  description = "List of EC2 instance types to use for the 'gpum' NodePool. g5/g4dn are fallbacks for regions where g6e has limited availability."
+  description = "List of EC2 instance types to use for the 'gpum' NodePool (1× L40S). g6e.2xlarge is a fallback for regions with limited g6e.xlarge availability."
   type        = list(string)
-  default     = ["g6e.xlarge", "g6e.2xlarge", "g5.xlarge", "g5.2xlarge", "g4dn.xlarge"]
+  default     = ["g6e.xlarge", "g6e.2xlarge"]
 }
 
 variable "node_disk_size" {
