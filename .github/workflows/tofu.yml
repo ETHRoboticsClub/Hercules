@@ -86,8 +86,9 @@ jobs:
       - name: Plan
         run: |
           set -o pipefail
-          # ANSI output renders natively in the Actions live log
-          tofu plan 2>&1 | tee plan.ansi
+          # ANSI output renders natively in the Actions live log; -out saves the
+          # binary plan so apply executes exactly what was reviewed.
+          tofu plan -out=tfplan 2>&1 | tee plan.ansi
           # Strip colours for the step summary diff block
           sed 's/\x1b\[[0-9;]*m//g' plan.ansi > plan.txt
 
@@ -97,6 +98,15 @@ jobs:
           echo '```diff' >> $GITHUB_STEP_SUMMARY
           cat plan.txt  >> $GITHUB_STEP_SUMMARY
           echo '```'    >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: |
+            tfplan
+            .terraform.lock.hcl
+          retention-days: 7
 
   # ── Apply ──────────────────────────────────────────────────────────────────────
   # Pauses for manual approval (configure required reviewers on the "production"

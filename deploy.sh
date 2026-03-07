@@ -21,7 +21,6 @@ tofu apply \
   -target=module.eks \
   -target=module.waf \
   -target=module.s3_ml_data \
-  -target=module.ecr \
   "$@"
 
 # Phase 2: everything else — Helm charts, k8s manifests, ArgoCD, Karpenter
