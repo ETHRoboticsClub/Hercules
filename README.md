@@ -20,11 +20,18 @@ cp terraform.tfvars.example terraform.tfvars
 
 tofu init
 tofu plan
-tofu apply  # ~15–20 min
+
+# Fresh cluster — two-phase deploy required (see deploy.sh for details)
+./deploy.sh
+
+# Subsequent applies (updates, drift fixes)
+tofu apply
 
 $(tofu output -raw configure_kubectl)
 kubectl get nodes -o wide
 ```
+
+> **Fresh deploys require `./deploy.sh`** instead of a plain `tofu apply`. The Kubernetes and Helm providers authenticate before any resources exist, so a single apply will always fail for add-on resources. `deploy.sh` runs Phase 1 (VPC, EKS, S3) first and Phase 2 (Helm charts, ArgoCD, Karpenter) once the API server is ready.
 
 ## Docs
 
@@ -42,6 +49,7 @@ variables.tf              # input variables
 outputs.tf                # outputs
 backend.tf                # S3 remote state
 terraform.tfvars.example  # copy → terraform.tfvars
+deploy.sh                 # two-phase deploy for fresh clusters
 
 modules/aws/
   vpc/                    # dual-stack VPC
