@@ -61,6 +61,17 @@ output "cluster_certificate_authority_data" {
   sensitive   = true
 }
 
+# ECR Outputs
+output "ecr_repository_urls" {
+  description = "ECR repository URLs."
+  value       = module.ecr.repository_urls
+}
+
+output "ecr_github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions ECR push. Set as AWS_ECR_ROLE_ARN in the docker-images repo secrets."
+  value       = module.ecr.github_actions_role_arn
+}
+
 # EKS Node Group Outputs
 output "node_group_id" {
   description = "EKS node group ID"
