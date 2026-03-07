@@ -9,6 +9,6 @@ output "bucket_arn" {
 }
 
 output "kms_key_arn" {
-  description = "ARN of the KMS key used to encrypt the ML data bucket."
-  value       = aws_kms_key.ml_data.arn
+  description = "ARN of the KMS key used to encrypt the ML data bucket. Null when encrypt_with_kms = false."
+  value       = var.encrypt_with_kms ? aws_kms_key.ml_data[0].arn : null
 }
