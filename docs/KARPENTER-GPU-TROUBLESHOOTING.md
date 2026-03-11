@@ -4,7 +4,7 @@ When GPU pods stay pending and Karpenter isn't provisioning nodes, use these ste
 
 ## 1. Verify GPU Operator is installed
 
-**Critical:** `node_tier` must be `gpus`, `gpum`, or `gpul` for the NVIDIA GPU Operator to be installed. Without it, GPU nodes won't advertise `nvidia.com/gpu` and pods stay pending.
+**Critical:** `node_tier` must be `gpus`, `gpum`, `gpul`, or `h100` for the NVIDIA GPU Operator to be installed. Without it, GPU nodes won't advertise `nvidia.com/gpu` and pods stay pending.
 
 ```bash
 # Check node_tier in your terraform.tfvars
@@ -13,7 +13,7 @@ kubectl get pods -n gpu-operator
 kubectl get daemonset -n gpu-operator
 ```
 
-If `node_tier=cpu`, run `tofu apply` with `node_tier = "gpum"` (or another GPU tier) to install the operator.
+If `node_tier=cpu`, run `tofu apply` with `node_tier = "gpum"` (or another GPU tier: gpus, gpul, h100) to install the operator.
 
 ## 2. Check NodePool and EC2NodeClass status
 

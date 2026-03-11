@@ -47,13 +47,13 @@ variable "public_subnet_cidrs" {
 }
 
 variable "node_tier" {
-  description = "Compute tier for the node group: 'cpu', 'gpus', 'gpum', or 'gpul'. GPU tiers auto-install the NVIDIA GPU Operator."
+  description = "Compute tier for the node group: 'cpu', 'gpus', 'gpum', 'gpul', or 'h100'. GPU tiers auto-install the NVIDIA GPU Operator."
   type        = string
   default     = "cpu"
 
   validation {
-    condition     = contains(["cpu", "gpus", "gpum", "gpul"], var.node_tier)
-    error_message = "node_tier must be one of: cpu, gpus, gpum, gpul."
+    condition     = contains(["cpu", "gpus", "gpum", "gpul", "h100"], var.node_tier)
+    error_message = "node_tier must be one of: cpu, gpus, gpum, gpul, h100."
   }
 }
 
