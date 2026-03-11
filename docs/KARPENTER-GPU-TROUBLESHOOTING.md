@@ -77,3 +77,4 @@ aws ec2 describe-subnets --filters "Name=tag:karpenter.sh/discovery,Values=<your
 | EC2NodeClass not Ready | Check subnet/SG tags, IAM instance profile |
 | `no instance type satisfied` | Verify NodePool limits, instance types, and daemonset overhead |
 | Region capacity | Try different `gpum_instance_types` or AZs |
+| Stuck in single AZ | Use EFS instead of EBS, or delete zone-bound PVCs/PVs |
