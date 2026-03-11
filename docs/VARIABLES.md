@@ -32,9 +32,9 @@ See [BYOIP.md](BYOIP.md) for setup instructions.
 
 | Variable | Type | Default | Description |
 |---|---|---|---|
-| `node_tier` | `string` | `cpu` | Compute tier: `cpu`, `gpus`, `gpum`, or `gpul` |
+| `node_tier` | `string` | `cpu` | Compute tier: `cpu`, `gpus`, `gpum`, `gpul`, or `h100` |
 | `node_disk_size` | `number` | `200` | Root disk size in GB |
-| `gpu_node_max_lifetime` | `string` | `16h` | Hard TTL for gpus/gpum/gpul nodes — Karpenter will drain and terminate after this duration regardless of workload state. Go duration syntax (e.g. `"72h"`). Set to `"Never"` to disable. |
+| `gpu_node_max_lifetime` | `string` | `16h` | Hard TTL for gpus/gpum/gpul/h100 nodes — Karpenter will drain and terminate after this duration regardless of workload state. Go duration syntax (e.g. `"72h"`). Set to `"Never"` to disable. |
 | `gpum_instance_types` | `list(string)` | `["g6e.xlarge", "g6e.2xlarge", "g5.xlarge", "g5.2xlarge", "g4dn.xlarge"]` | List of EC2 instance types for the `gpum` NodePool; g5/g4dn are fallbacks for regions where g6e has limited availability |
 
 `node_tier` controls Karpenter NodePool selection and whether the NVIDIA GPU Operator is installed:
@@ -44,7 +44,8 @@ See [BYOIP.md](BYOIP.md) for setup instructions.
 | `cpu` | m5, m6i, t3 (spot-eligible) | No |
 | `gpus` | g6.xlarge (1× L4 24GB) | Yes |
 | `gpum` | Configurable via `gpum_instance_types` | Yes |
-| `gpul` | p5.xlarge (1× H100) | Yes |
+| `gpul` | g6e.12xlarge (4× L40S 192GB) | Yes |
+| `h100` | p5.4xlarge (8× H100 80GB) | Yes |
 
 ---
 

@@ -24,8 +24,8 @@ variable "node_tier" {
   type        = string
 
   validation {
-    condition     = contains(["cpu", "gpus", "gpum", "gpul"], var.node_tier)
-    error_message = "node_tier must be one of: cpu, gpus, gpum, gpul."
+    condition     = contains(["cpu", "gpus", "gpum", "gpul", "h100"], var.node_tier)
+    error_message = "node_tier must be one of: cpu, gpus, gpum, gpul, h100."
   }
 }
 

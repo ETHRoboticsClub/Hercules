@@ -179,3 +179,31 @@ resource "kubectl_manifest" "nodepool_gpul" {
 
   depends_on = [kubectl_manifest.karpenter_node_class]
 }
+
+# NodePool: h100 — p5.4xlarge (1× H100 80GB), on-demand only
+resource "kubectl_manifest" "nodepool_h100" {
+  yaml_body = yamlencode({
+    apiVersion = "karpenter.sh/v1"
+    kind       = "NodePool"
+    metadata   = { name = "h100" }
+    spec = {
+      template = {
+        metadata = { labels = { "node-tier" = "h100" } }
+        spec = {
+          nodeClassRef = { group = "karpenter.k8s.aws", kind = "EC2NodeClass", name = "default" }
+          expireAfter  = var.gpu_node_max_lifetime
+          requirements = [
+            { key = "karpenter.sh/capacity-type", operator = "In", values = ["on-demand"] },
+            { key = "node.kubernetes.io/instance-type", operator = "In", values = ["p5.4xlarge"] },
+            { key = "kubernetes.io/arch", operator = "In", values = ["amd64"] },
+          ]
+          taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]
+        }
+      }
+      limits     = { "nvidia.com/gpu" = "8" }
+      disruption = { consolidationPolicy = "WhenEmpty", consolidateAfter = "5m" }
+    }
+  })
+
+  depends_on = [kubectl_manifest.karpenter_node_class]
+}

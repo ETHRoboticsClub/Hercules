@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# NVIDIA GPU Operator (gpus / gpum / gpul tiers only)
+# NVIDIA GPU Operator (gpus / gpum / gpul / h100 tiers)
 # ─────────────────────────────────────────────────────────────────────────────
 # EKS GPU-optimised AMIs ship with NVIDIA drivers pre-installed, so
 # driver.enabled=false tells the operator to skip driver installation and only
