@@ -72,11 +72,8 @@ resource "helm_release" "opencost" {
         defaultClusterId = var.cluster_name
       }
       prometheus = {
-        # Use the internal Prometheus we deployed
-        internal = {
-          enabled = true
-        }
-        # External URL for queries
+        # Use external mode pointing to our deployed Prometheus
+        # (internal mode is for the bundled Prometheus, which we don't use)
         external = {
           enabled = true
           url = "http://prometheus-server.prometheus-system.svc.cluster.local:80"
