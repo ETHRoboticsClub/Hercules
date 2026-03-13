@@ -10,7 +10,52 @@ locals {
   enable_opencost = true
 }
 
-# OpenCost requires Prometheus - check if it's already installed
+# Prometheus server for OpenCost metrics
+resource "helm_release" "prometheus" {
+  count = local.enable_opencost ? 1 : 0
+
+  name             = "prometheus"
+  repository       = "https://prometheus-community.github.io/helm-charts"
+  chart            = "prometheus"
+  version          = "25.27.0"
+  namespace        = "prometheus-system"
+  create_namespace = true
+
+  values = [yamlencode({
+    server = {
+      persistentVolume = {
+        enabled = true
+        size    = "10Gi"
+      }
+      retention = "15d"
+      # Scrape OpenCost metrics
+      extraScrapeConfigs = <<-EOF
+        - job_name: opencost
+          honor_labels: true
+          scrape_interval: 1m
+          scrape_timeout: 10s
+          metrics_path: /metrics
+          scheme: http
+          dns_sd_configs:
+          - names:
+            - opencost.opencost
+            type: 'A'
+            port: 9003
+      EOF
+    }
+    # Reduce resource usage for our setup
+    alertmanager = {
+      enabled = false
+    }
+    pushgateway = {
+      enabled = false
+    }
+  })]
+
+  depends_on = [aws_eks_addon.coredns]
+}
+
+# OpenCost cost monitoring
 resource "helm_release" "opencost" {
   count = local.enable_opencost ? 1 : 0
 
@@ -27,9 +72,14 @@ resource "helm_release" "opencost" {
         defaultClusterId = var.cluster_name
       }
       prometheus = {
+        # Use the internal Prometheus we deployed
         internal = {
           enabled = true
-          namespace = "prometheus-system"
+        }
+        # External URL for queries
+        external = {
+          enabled = true
+          url = "http://prometheus-server.prometheus-system.svc.cluster.local:80"
         }
       }
       ui = {
@@ -49,5 +99,5 @@ resource "helm_release" "opencost" {
     }
   })]
 
-  depends_on = [aws_eks_addon.coredns]
+  depends_on = [helm_release.prometheus]
 }
