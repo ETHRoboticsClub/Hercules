@@ -50,6 +50,4 @@ resource "helm_release" "opencost" {
   })]
 
   depends_on = [aws_eks_addon.coredns]
-
-  tags = var.tags
 }
