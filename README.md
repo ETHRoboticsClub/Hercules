@@ -20,6 +20,8 @@ Cluster orchestration for the ETHRC organisation. OpenTofu IaC that provisions a
 | M | `gpum` | g6e.xlarge | 1× L40S | 48 GB | Core prototyping, LoRA fine-tuning (up to 14B params), heavy inference |
 | L | `gpul` | g6e.12xlarge | 4× L40S | 192 GB | Distributed training (DDP/FSDP), continuous pre-training, large batch sizes |
 
+We also offer `a100-40, a100-80` for A100 40/80GB, though with limited capacity.
+
 ## Quick start
 
 ```bash
