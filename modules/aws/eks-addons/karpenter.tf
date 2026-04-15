@@ -116,7 +116,7 @@ resource "kubectl_manifest" "nodepool_gpus" {
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]
         }
       }
-      limits     = { "nvidia.com/gpu" = "8" }
+      limits     = { "nvidia.com/gpu" = "32" }
       disruption = { consolidationPolicy = "WhenEmpty", consolidateAfter = "5m" }
     }
   })
@@ -144,7 +144,7 @@ resource "kubectl_manifest" "nodepool_gpum" {
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]
         }
       }
-      limits     = { "nvidia.com/gpu" = "8" }
+      limits     = { "nvidia.com/gpu" = "32" }
       disruption = { consolidationPolicy = "WhenEmpty", consolidateAfter = "5m" }
     }
   })
@@ -172,7 +172,7 @@ resource "kubectl_manifest" "nodepool_gpul" {
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]
         }
       }
-      limits     = { "nvidia.com/gpu" = "8" }
+      limits     = { "nvidia.com/gpu" = "32" }
       disruption = { consolidationPolicy = "WhenEmpty", consolidateAfter = "5m" }
     }
   })
@@ -200,7 +200,7 @@ resource "kubectl_manifest" "nodepool_h100" {
           taints = [{ key = "nvidia.com/gpu", value = "true", effect = "NoSchedule" }]
         }
       }
-      limits     = { "nvidia.com/gpu" = "8" }
+      limits     = { "nvidia.com/gpu" = "32" }
       disruption = { consolidationPolicy = "WhenEmpty", consolidateAfter = "5m" }
     }
   })
