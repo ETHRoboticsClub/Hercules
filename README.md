@@ -1,3 +1,5 @@
+![Hercules Banner](.github/banner.webp)
+
 # Hercules
 
 Cluster orchestration for the ETHRC organisation. OpenTofu IaC that provisions an IPv6-primary EKS cluster on AWS with GPU autoscaling and GitOps, purpose-built for ML training workloads.
